@@ -22,13 +22,13 @@ CREATE TABLE tasks (
 -- Paso 5: Vamos a insertar algunas tareas con respecto a INMATER
 INSERT INTO tasks (title, due_date, status_id) 
 VALUES 
-    ('Evaluación inicial de la pareja Chamairo Riveros', '2025-03-05', 3), 
-    ('Análisis hormonal de la paciente Riveros Haydee', '2025-03-08', 3), 
-    ('Revisión de resultados de exámenes Riveros Haydee', NULL, 2), 
-    ('Consulta de planificación del tratamiento', '2025-03-10', 2), 
-    ('Aplicación de medicación de estimulación ovárica', '2025-03-15', 1), 
-    ('Seguimiento ecográfico', NULL, 1),
-    ('Prueba de embarazo y evaluación de resultados de la paciente Riveros Haydee', '2025-04-05', 1);
+    ('Evaluacion inicial de la pareja Chamairo Riveros', '2025-03-05', 3), 
+    ('Analisis hormonal de la paciente Riveros Haydee', '2025-03-08', 3), 
+    ('Revision de resultados de examenes Riveros Haydee', NULL, 2), 
+    ('Consulta de planificacion del tratamiento', '2025-03-10', 2), 
+    ('Aplicacion de medicacion de estimulacion ovarica', '2025-03-15', 1), 
+    ('Seguimiento ecografico', NULL, 1),
+    ('Prueba de embarazo y evaluacion de resultados de la paciente Riveros Haydee', '2025-04-05', 1);
 
 -- Paso 6: Vamos a consultar las tareas con su estado correspondiente
 SELECT tasks.id, tasks.title, tasks.due_date, statuses.name AS estado 
