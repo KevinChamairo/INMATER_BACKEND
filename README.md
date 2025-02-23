@@ -1,4 +1,11 @@
-# INMATER_BACKEND
+-----------------------------------------------------------------------------------------------
+COMANDOS PARA COONFIGURAR Y LEVANTAR EL PROYECTO
+"npm install"
+"npm run dev"
+
+ojo: atencion con el archivo  "database.ts" que contiene la configuración de la base de datos de postgresql a la que se estaría apuntando.
+-----------------------------------------------------------------------------------------------
+# INMATER_BACKEND - INFORMATIVO
 -----------------------------------------------------------------------------------------------
 _VERSION NODE: 21.7.3
 -----------------------------------------------------------------------------------------------
