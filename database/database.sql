@@ -9,7 +9,7 @@ CREATE TABLE statuses (
 );
 
 -- Paso 3: Vamos a insertar los valores de estado según las especficaciones del documento de la prueba técnica
-INSERT INTO statuses (name) VALUES ('pendiente'), ('en progreso'), ('completada');
+INSERT INTO statuses (name) VALUES ('pendiente'), ('en progreso'), ('completada'), ('atrasada');
 
 -- Paso 4: Vamos a crear la tabla de tareas
 CREATE TABLE tasks (

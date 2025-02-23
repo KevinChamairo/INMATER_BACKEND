@@ -5,7 +5,18 @@ import { QueryResult } from 'pg';
 export const getTasks = async (req: Request, res: Response) => {
     try {
         const response: QueryResult = await pool.query(`
-            SELECT tasks.id, tasks.title, tasks.due_date, statuses.name AS estado 
+            SELECT 
+                tasks.id, 
+                tasks.title, 
+                tasks.due_date, 
+                CASE 
+                    WHEN tasks.due_date < CURRENT_DATE AND statuses.name != 'completada' THEN 4
+                    ELSE statuses.id
+                END AS status_id,
+                CASE 
+                    WHEN tasks.due_date < CURRENT_DATE AND statuses.name != 'completada' THEN 'atrasada'
+                    ELSE statuses.name
+                END AS status_desc
             FROM tasks
             JOIN statuses ON tasks.status_id = statuses.id
             ORDER BY tasks.id ASC;
@@ -20,17 +31,41 @@ export const getTasks = async (req: Request, res: Response) => {
 export const getTaskById = async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id);
-        const response: QueryResult = await pool.query(
-            `SELECT tasks.id, tasks.title, tasks.due_date, statuses.name AS estado 
-             FROM tasks
-             JOIN statuses ON tasks.status_id = statuses.id 
-             WHERE tasks.id = $1;`,
-            [id]
-        );
+        const response: QueryResult = await pool.query(`
+            SELECT 
+                tasks.id, 
+                tasks.title, 
+                tasks.due_date, 
+                CASE 
+                    WHEN tasks.due_date < CURRENT_DATE AND statuses.name != 'completada' THEN 4
+                    ELSE statuses.id
+                END AS status_id,
+                CASE 
+                    WHEN tasks.due_date < CURRENT_DATE AND statuses.name != 'completada' THEN 'atrasada'
+                    ELSE statuses.name
+                END AS status_desc
+            FROM tasks
+            JOIN statuses ON tasks.status_id = statuses.id
+            WHERE tasks.id = $1;
+        `, [id]);
+
         res.json(response.rows);
     } catch (e) {
         console.log(e);
         res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+export const updateOverdueTasks = async () => {
+    try {
+        await pool.query(`
+            UPDATE tasks
+            SET status_id = (SELECT id FROM statuses WHERE name = 'atrasada')
+            WHERE due_date < CURRENT_DATE AND status_id != (SELECT id FROM statuses WHERE name = 'completada');
+        `);
+        console.log("Se actualizaron las tareas atrasadas correctamente.");
+    } catch (e) {
+        console.error("Error al actualizar tareas atrasadas:", e);
     }
 };
 

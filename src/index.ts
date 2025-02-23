@@ -1,13 +1,21 @@
 import express from "express";
+import cors from "cors";  // Importa cors
+
 const app = express();
 
-import indexRoutes from './routes/index'
+app.use(cors({
+  origin: "http://localhost:4200", 
+  methods: "GET,POST,PUT,DELETE",  
+  allowedHeaders: "Content-Type,Authorization" 
+}));
 
-//middlewares --> funciones que se ejecutan antes de que lleguen a las rutas.
 app.use(express.json());
-app.use(express.urlencoded({extended: false}))
+app.use(express.urlencoded({ extended: false }));
 
-app.use(indexRoutes)
+import indexRoutes from "./routes/index";
+app.use(indexRoutes);
 
-app.listen(3000);
-console.log("Server on port", 3000);
+
+app.listen(3000, () => {
+  console.log("Server on port", 3000);
+});

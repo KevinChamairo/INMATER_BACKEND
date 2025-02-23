@@ -51,3 +51,9 @@ _npm i nodemon -D --> Comando para poder reiniciar el servidor cada vez que yo c
 _npm i concurrently -D --> Comando para unir NPM RUN BUILD y NPM RUN DEV
 -----------------------------------------------------------------------------------------------
 _psql -U postgres --> Para trabajar en la terminal y poner los scripts correspondientes para con Postgres con el sistema operativo de Windows.
+-----------------------------------------------------------------------------------------------
+_npm install --save-dev jest ts-jest @types/jest
+_npm i -D jest supertest
+-----------------------------------------------------------------------------------------------
+npm install cors
+npm i --save-dev @types/cors

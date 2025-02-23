@@ -9,23 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTask = exports.updateTask = exports.createTask = exports.updateOverdueTasks = exports.getTaskById = exports.getTasks = void 0;
+exports.deleteTask = exports.updateTask = exports.createTask = exports.getTaskById = exports.getTasks = void 0;
 const database_1 = require("../database");
 const getTasks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield database_1.pool.query(`
-            SELECT 
-                tasks.id, 
-                tasks.title, 
-                tasks.due_date, 
-                CASE 
-                    WHEN tasks.due_date < CURRENT_DATE AND statuses.name != 'completada' THEN 4
-                    ELSE statuses.id
-                END AS status_id,
-                CASE 
-                    WHEN tasks.due_date < CURRENT_DATE AND statuses.name != 'completada' THEN 'atrasada'
-                    ELSE statuses.name
-                END AS status_desc
+            SELECT tasks.id, tasks.title, tasks.due_date, statuses.name AS estado 
             FROM tasks
             JOIN statuses ON tasks.status_id = statuses.id
             ORDER BY tasks.id ASC;
@@ -41,23 +30,10 @@ exports.getTasks = getTasks;
 const getTaskById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = parseInt(req.params.id);
-        const response = yield database_1.pool.query(`
-            SELECT 
-                tasks.id, 
-                tasks.title, 
-                tasks.due_date, 
-                CASE 
-                    WHEN tasks.due_date < CURRENT_DATE AND statuses.name != 'completada' THEN 4
-                    ELSE statuses.id
-                END AS status_id,
-                CASE 
-                    WHEN tasks.due_date < CURRENT_DATE AND statuses.name != 'completada' THEN 'atrasada'
-                    ELSE statuses.name
-                END AS status_desc
-            FROM tasks
-            JOIN statuses ON tasks.status_id = statuses.id
-            WHERE tasks.id = $1;
-        `, [id]);
+        const response = yield database_1.pool.query(`SELECT tasks.id, tasks.title, tasks.due_date, statuses.name AS estado 
+             FROM tasks
+             JOIN statuses ON tasks.status_id = statuses.id 
+             WHERE tasks.id = $1;`, [id]);
         res.json(response.rows);
     }
     catch (e) {
@@ -66,20 +42,6 @@ const getTaskById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.getTaskById = getTaskById;
-const updateOverdueTasks = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        yield database_1.pool.query(`
-            UPDATE tasks
-            SET status_id = (SELECT id FROM statuses WHERE name = 'atrasada')
-            WHERE due_date < CURRENT_DATE AND status_id != (SELECT id FROM statuses WHERE name = 'completada');
-        `);
-        console.log("Se actualizaron las tareas atrasadas correctamente.");
-    }
-    catch (e) {
-        console.error("Error al actualizar tareas atrasadas:", e);
-    }
-});
-exports.updateOverdueTasks = updateOverdueTasks;
 const createTask = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, due_date, status_id } = req.body;
     try {
